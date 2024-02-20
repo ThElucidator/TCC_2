@@ -1,0 +1,18 @@
+body {
+    font-family: sans-serif;
+}
+
+H1, H2, H3, H4, H5, H6 {
+    font-family: sans-serif;
+    color: rgb(0, 246, 62);
+}
+body {
+    font-family: sans-serif;
+    background-color: #f7f7f7;
+}
+
+H1, H2, H3, H4, H5, H6 {
+    font-family: cursive;
+    color: rgb(31, 121, 28);
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
