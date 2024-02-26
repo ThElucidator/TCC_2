@@ -6,7 +6,6 @@ from dash import dcc, html
 from dash.dependencies import Input, Output
 from mysql import connector
 
-
 # Defining a database class
 class DB:
     # Initializing the class with a database connection and a cursor
@@ -35,82 +34,177 @@ class DB:
         self.sql.execute(query)
         self.cnx.commit()
 
-
 # Creating a Dash app
 app = dash.Dash("TCC_2")
 
 # Defining the layout of the app
 app.layout = html.Div(
-    [  
+    [
+        html.H1("Mapa da Evasão de Alunos - IFNMG-TO", style={"display": "flex", "justify-content": "center", "align-items": "top", "height": "5vh"}),
         html.Div(
-            [   
+            [
                 html.Div(
                     [
-                        html.H3("Situação de Bolsa"),
-                        dcc.Checklist(
-                            id="bolsa-filter",
-                            options=[
-                                {"label": "Sim", "value": "sim"},
-                                {"label": "Não", "value": "nao"},
+                        html.Button(
+                            "Filtrar por Situação de Bolsa",
+                            id="toggle-bolsa-filter",
+                            n_clicks=0,
+                            style={"margin-bottom": "25px"},
+                        ),
+                        html.Div(
+                            [
+                                dcc.Checklist(
+                                    id="bolsa-filter",
+                                    options=[
+                                        {"label": "Sim", "value": "sim"},
+                                        {"label": "Não", "value": "nao"},
+                                    ],
+                                    value=["sim", "nao"],
+                                    style={"display": "inline-block", "width": "200px"},
+                                ),
                             ],
-                            value=["sim", "nao"],
-                            style={"display": "inline-block", "width": "200px"},
+                            id="bolsa-filter-container",
                         ),
                     ]
-                ),
+                , style={"margin-right": "20px", "width": "15vw"}),
                 html.Div(
                     [
-                        html.H3("Aproveitamento do Aluno"),
-                        dcc.RangeSlider(0, 100, 20, value=[0, 100], id="nota-filter"),
-                    ],
-                    style={
-                        "display": "inline-block",
-                        "width": "250px",
-                        "margin-right": "20px",
-                    },
-                ),
-                html.Div(
-                    [
-                        html.H3("Situação de Trabalho"),
-                        dcc.Checklist(
-                            id="trab-filter",
-                            options=[
-                                {"label": "Trabalha", "value": "trabalha"},
-                                {"label": "Desempregado(a)", "value": "desempregado"},
-                                {"label": "Não Trabalha", "value": "nao trabalha"},
+                        html.Button(
+                            "Filtrar por Aproveitamento do Aluno",
+                            id="toggle-aproveitamento-filter",
+                            n_clicks=0,
+                            style={"margin-bottom": "50px"},
+                        ),
+                        html.Div(
+                            [
+                                dcc.RangeSlider(
+                                    0, 100, 20, value=[0, 100], id="nota-filter"
+                                ),
                             ],
-                            value=["trabalha", "desempregado", "nao trabalha"],
-                            style={"display": "inline-block", "width": "200px", "margin-right": "20px"},
+                            id="aproveitamento-filter-container",
                         ),
                     ]
-                ),
+                , style={"margin-right": "100px", "width": "15vw"}),
                 html.Div(
                     [
-                        html.H3("Situação Civil"),
-                        dcc.Checklist(
-                            id="civ-filter",
-                            options=[
-                                {"label": "Separado(a)", "value": "separado(a)"},
-                                {"label": "Divorciado(a)", "value": "divorciado(a)"},
-                                {"label": "Casado(a)", "value": "casado(a)"},
-                                {"label": "Solteiro(a)", "value": "solteiro(a)"},
-                            ],
-                            value=[
-                                "separado(a)",
-                                "divorciado(a)",
-                                "casado(a)",
-                                "solteiro(a)",
-                            ],
+                        html.Button(
+                            "Filtrar por Situação de Trabalho",
+                            id="toggle-trab-filter",
+                            n_clicks=0,
+                            style={"margin-bottom": "25px"},
                         ),
-                    ],
-                    style={"display": "inline-block", "width": "200px"},
-                ),
+                        html.Div(
+                            [
+                                dcc.Checklist(
+                                    id="trab-filter",
+                                    options=[
+                                        {"label": "Trabalha", "value": "trabalha"},
+                                        {"label": "Desempregado(a)", "value": "desempregado"},
+                                        {"label": "Não Trabalha", "value": "nao trabalha"},
+                                    ],
+                                    value=["trabalha", "desempregado", "nao trabalha"],
+                                    style={"display": "inline-block", "width": "200px", "margin-right": "20px"},
+                                ),
+                            ],
+                            id="trab-filter-container",
+                        ),
+                    ]
+                , style={"margin-right": "60px", "width": "15vw"}),
+                html.Div(
+                    [
+                        html.Button(
+                            "Filtrar por Situação Civil",
+                            id="toggle-civ-filter",
+                            n_clicks=0,
+                            style={"margin-bottom": "20px"},
+                        ),
+                        html.Div(
+                            [
+                                dcc.Checklist(
+                                    id="civ-filter",
+                                    options=[
+                                        {"label": "Separado(a)", "value": "separado(a)"},
+                                        {"label": "Divorciado(a)", "value": "divorciado(a)"},
+                                        {"label": "Casado(a)", "value": "casado(a)"},
+                                        {"label": "Solteiro(a)", "value": "solteiro(a)"},
+                                    ],
+                                    value=[
+                                        "separado(a)",
+                                        "divorciado(a)",
+                                        "casado(a)",
+                                        "solteiro(a)",
+                                    ],
+                                ),
+                            ],
+                            id="civ-filter-container",
+                        ),
+                    ]
+                , style={"width": "15vw"}),
             ],
-            style={"display": "flex"},
+            style={
+                "display": "flex",
+                "justify-content": "center",
+                "align-items": "top",
+                "height": "15vh",
+            },
         ),
-        html.Div([dcc.Graph(id="scatter-map")]),
+        html.Div(
+            [dcc.Graph(id="scatter-map")],
+            style={
+                "display": "flex",
+                "justify-content": "center",
+                "align-items": "top",
+                "height": "70vh",
+                "border": "2px solid black",
+                "border-radius": "10px",
+            },
+        ),
     ]
 )
+
+
+# Callbacks to toggle the visibility of each filter
+@app.callback(
+    Output("bolsa-filter-container", "style"),
+    [Input("toggle-bolsa-filter", "n_clicks")],
+)
+def toggle_bolsa_filter(n_clicks):
+    if n_clicks % 2 == 0:
+        return {"display": "none"}
+    else:
+        return {"display": "block"}
+
+@app.callback(
+    Output("aproveitamento-filter-container", "style"),
+    [Input("toggle-aproveitamento-filter", "n_clicks")],
+)
+def toggle_aproveitamento_filter(n_clicks):
+    if n_clicks % 2 == 0:
+        return {"display": "none"}
+    else:
+        return {"display": "block", "margin-left": "-50px"}
+
+
+@app.callback(
+    Output("trab-filter-container", "style"),
+    [Input("toggle-trab-filter", "n_clicks")],
+)
+def toggle_trab_filter(n_clicks):
+    if n_clicks % 2 == 0:
+        return {"display": "none"}
+    else:
+        return {"display": "block"}
+
+
+@app.callback(
+    Output("civ-filter-container", "style"),
+    [Input("toggle-civ-filter", "n_clicks")],
+)
+def toggle_civ_filter(n_clicks):
+    if n_clicks % 2 == 0:
+        return {"display": "none"}
+    else:
+        return {"display": "block"}
 
 
 # Defining a callback function for updating the scatter plot
@@ -129,33 +223,52 @@ def plot(bolsa_filter, nota_filter, trab_filter, civ_filter):
     # Querying the database and filling in missing values with 'N/A'
     alunos_linhas = db.select("*", "alunos").fillna("N/A")
 
-    alunos_linhas = alunos_linhas.query(f"bolsa in {bolsa_filter}")
-    alunos_linhas = alunos_linhas.query(
-        f"aproveitamento >= {nota_filter[0]} & aproveitamento <= {nota_filter[1]}"
-    )
-    alunos_linhas = alunos_linhas.query(f"situacaotrab in {trab_filter}")
-    alunos_linhas = alunos_linhas.query(f"situacaocivil in {civ_filter}")
+    if len(bolsa_filter) > 0:
+        alunos_linhas = alunos_linhas.query(f"bolsa in {bolsa_filter}")
+    else:
+        alunos_linhas = alunos_linhas.sample(0)
+    if len(nota_filter) > 0:
+        alunos_linhas = alunos_linhas.query(
+            f"aproveitamento >= {nota_filter[0]} & aproveitamento <= {nota_filter[1]}"
+        )
+    if len(trab_filter) > 0:
+        alunos_linhas = alunos_linhas.query(f"situacaotrab in {trab_filter}")
+    else:
+        alunos_linhas = alunos_linhas.sample(0)
+    if len(civ_filter) > 0:
+        alunos_linhas = alunos_linhas.query(f"situacaocivil in {civ_filter}")
+    else:
+        alunos_linhas = alunos_linhas.sample(0)
 
     # Creating the scatter plot
-    fig = px.scatter_mapbox(
-        alunos_linhas,
-        hover_name="nome",
-        hover_data=[
-            "situacao",
-            "bolsa",
-            "aproveitamento",
-            "situacaotrab",
-            "situacaocivil",
-            "descricao",
-        ],
-        lat="lat",
-        lon="lon",
-        color="situacao",
-        zoom=9,
-        width=900,
-        height=600,
-        title="Mapa da evasão de alunos",
-    )
+    if alunos_linhas.empty:
+        fig = px.scatter_mapbox(
+            alunos_linhas,
+            lat=[],
+            lon=[],
+            zoom=9.6,
+            width=1800,
+            height=620,
+        )
+    else:
+        fig = px.scatter_mapbox(
+            alunos_linhas,
+            hover_name="nome",
+            hover_data=[
+                "situacao",
+                "bolsa",
+                "aproveitamento",
+                "situacaotrab",
+                "situacaocivil",
+                "descricao",
+            ],
+            lat="lat",
+            lon="lon",
+            color="situacao",
+            zoom=9.6,
+            width=1800,
+            height=620,
+        )
 
     fig.update_layout(
         mapbox_style="open-street-map",
@@ -170,5 +283,3 @@ def plot(bolsa_filter, nota_filter, trab_filter, civ_filter):
 # Running the app
 if __name__ == "__main__":
     app.run_server(debug=True)
-
-

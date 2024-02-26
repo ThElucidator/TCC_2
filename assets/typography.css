@@ -13,6 +13,15 @@ body {
 
 H1, H2, H3, H4, H5, H6 {
     font-family: cursive;
-    color: rgb(31, 121, 28);
+    font-weight: bold;
+    color: rgb(0, 125, 0);
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+button {
+    font-family: cursive;
+    background-color: rgb(79, 245, 143);
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
