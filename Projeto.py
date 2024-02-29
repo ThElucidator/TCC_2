@@ -88,6 +88,32 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Button(
+                            "Filtrar por Turma",
+                            id="toggle-turma-filter",
+                            n_clicks=0,
+                            style={"margin-bottom": "20px"},
+                        ),
+                        html.Div(
+                            [
+                                dcc.Checklist(
+                                    id="turma-filter",
+                                    options=[
+                                        {"label": "2018", "value": 2018},
+                                        {"label": "2019", "value": 2019},
+                                        {"label": "2020", "value": 2020},
+                                        {"label": "2021", "value": 2021},
+                                    ],
+                                    value=[2018, 2019, 2020, 2021],
+                                    style={"display": "inline-block", "width": "200px", "margin-right": "20px"},
+                                ),
+                            ],
+                            id="turma-filter-container",
+                        ),
+                    ]
+                , style={"margin-right": "60px", "width": "15vw"}),
+                html.Div(
+                    [
+                        html.Button(
                             "Filtrar por Situação de Trabalho",
                             id="toggle-trab-filter",
                             n_clicks=0,
@@ -184,6 +210,15 @@ def toggle_aproveitamento_filter(n_clicks):
     else:
         return {"display": "block", "margin-left": "-50px"}
 
+@app.callback(
+    Output("turma-filter-container", "style"),
+    [Input("toggle-turma-filter", "n_clicks")],
+)
+def toggle_turma_filter(n_clicks):
+    if n_clicks % 2 == 0:
+        return {"display": "none"}
+    else:
+        return {"display": "block"}
 
 @app.callback(
     Output("trab-filter-container", "style"),
@@ -213,11 +248,12 @@ def toggle_civ_filter(n_clicks):
     [
         Input("bolsa-filter", "value"),
         Input("nota-filter", "value"),
+        Input("turma-filter", "value"),
         Input("trab-filter", "value"),
         Input("civ-filter", "value"),
     ],
 )
-def plot(bolsa_filter, nota_filter, trab_filter, civ_filter):
+def plot(bolsa_filter, nota_filter,turma_filter, trab_filter, civ_filter):
     # Creating an instance of the DB class
     db = DB()
     # Querying the database and filling in missing values with 'N/A'
@@ -227,14 +263,24 @@ def plot(bolsa_filter, nota_filter, trab_filter, civ_filter):
         alunos_linhas = alunos_linhas.query(f"bolsa in {bolsa_filter}")
     else:
         alunos_linhas = alunos_linhas.sample(0)
+
     if len(nota_filter) > 0:
         alunos_linhas = alunos_linhas.query(
             f"aproveitamento >= {nota_filter[0]} & aproveitamento <= {nota_filter[1]}"
         )
+    else:
+        alunos_linhas = alunos_linhas.sample(0)
+
+    if len(turma_filter) > 0:
+        alunos_linhas = alunos_linhas.query(f"turma in {turma_filter}")
+    else:
+        alunos_linhas = alunos_linhas.sample(0)
+
     if len(trab_filter) > 0:
         alunos_linhas = alunos_linhas.query(f"situacaotrab in {trab_filter}")
     else:
         alunos_linhas = alunos_linhas.sample(0)
+
     if len(civ_filter) > 0:
         alunos_linhas = alunos_linhas.query(f"situacaocivil in {civ_filter}")
     else:
@@ -258,6 +304,7 @@ def plot(bolsa_filter, nota_filter, trab_filter, civ_filter):
                 "situacao",
                 "bolsa",
                 "aproveitamento",
+                "turma",
                 "situacaotrab",
                 "situacaocivil",
                 "descricao",
