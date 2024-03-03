@@ -21,18 +21,21 @@ class DB:
     # Method to execute a select query, returning the result as a pandas DataFrame
     def select(self, campos, tabela, where=None):
         query = f"SELECT {campos} FROM {tabela}"
+
         if where:
             query += f" WHERE {where}"
+
         self.sql.execute(query)
         columns = self.sql.column_names
         rows = self.sql.fetchall()
+
         return pd.DataFrame(rows, columns=columns)
 
-    # Method to execute an insert query
-    def insert(self, tabela, campos, values):
-        query = f"INSERT INTO {tabela} ({campos}) VALUES ({values})"
-        self.sql.execute(query)
-        self.cnx.commit()
+    # Method to rename columns in a table
+    def rename(self, dataframe, mapping):
+        renamed_df = dataframe.rename(columns=mapping)
+
+        return renamed_df
 
 # Creating a Dash app
 app = dash.Dash("TCC_2")
@@ -286,6 +289,23 @@ def plot(bolsa_filter, nota_filter,turma_filter, trab_filter, civ_filter):
     else:
         alunos_linhas = alunos_linhas.sample(0)
 
+    # renaming columns to visualization
+    alunos_linhas = db.rename(
+        alunos_linhas,
+        {
+            "nome": "Nome",
+            "situacao": "Situação",
+            "bolsa": "Bolsa",
+            "aproveitamento": "Aproveitamento",
+            "turma": "Turma",
+            "situacaotrab": "Situação de Trabalho",
+            "situacaocivil": "Situação Civil",
+            "descricao": "Descrição",
+            "lat": "Latitude",
+            "lon": "Longitude",
+        },
+    )
+
     # Creating the scatter plot
     if alunos_linhas.empty:
         fig = px.scatter_mapbox(
@@ -299,19 +319,19 @@ def plot(bolsa_filter, nota_filter,turma_filter, trab_filter, civ_filter):
     else:
         fig = px.scatter_mapbox(
             alunos_linhas,
-            hover_name="nome",
+            hover_name="Nome",
             hover_data=[
-                "situacao",
-                "bolsa",
-                "aproveitamento",
-                "turma",
-                "situacaotrab",
-                "situacaocivil",
-                "descricao",
+                "Situação",
+                "Bolsa",
+                "Aproveitamento",
+                "Turma",
+                "Situação de Trabalho",
+                "Situação Civil",
+                "Descrição",
             ],
-            lat="lat",
-            lon="lon",
-            color="situacao",
+            lat="Latitude",
+            lon="Longitude",
+            color="Situação",
             zoom=9.6,
             width=1800,
             height=620,
