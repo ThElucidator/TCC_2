@@ -18,4 +18,5 @@ E após executar esse comando, basta executar o programa com:
 python3 projeto.py
 ```
 
-![image](https://github.com/user-attachments/assets/7ff8c15e-cd90-410b-b96f-8175d2403bc5)
+![image](https://github.com/user-attachments/assets/b9ef06db-dba1-49dd-ad1b-97322aa10ccc)
+
