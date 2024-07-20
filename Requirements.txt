@@ -1,0 +1,7 @@
+plotly==5.19.0
+dash==2.16.0
+dash-core-components==2.0.0
+pandas==2.2.1
+mysql==0.0.3
+mysql-connector-python==8.3.0
+mysqlclient==2.2.4
